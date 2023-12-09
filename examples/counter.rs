@@ -28,11 +28,11 @@ const ENV_PROGRAM_ADDRESS: &str = "STYLUS_PROGRAM_ADDRESS";
 #[tokio::main]
 async fn main() -> eyre::Result<()> {
     let priv_key_path = std::env::var(ENV_PRIV_KEY_PATH)
-        .map_err(|_| eyre!("No {} env var set", ENV_PRIV_KEY_PATH))?;
+        .map_err(|_| eyre!("Environment variable {} is not set", ENV_PRIV_KEY_PATH))?;
     let rpc_url =
-        std::env::var(ENV_RPC_URL).map_err(|_| eyre!("No {} env var set", ENV_RPC_URL))?;
+        std::env::var(ENV_RPC_URL).map_err(|_| eyre!("Environment variable {} is not set", ENV_RPC_URL))?;
     let program_address = std::env::var(ENV_PROGRAM_ADDRESS)
-        .map_err(|_| eyre!("No {} env var set", ENV_PROGRAM_ADDRESS))?;
+        .map_err(|_| eyre!("Environment variable {} is not set", ENV_PROGRAM_ADDRESS))?;
     abigen!(
         Counter,
         r#"[
@@ -45,7 +45,8 @@ async fn main() -> eyre::Result<()> {
     let provider = Provider::<Http>::try_from(rpc_url)?;
     let address: Address = program_address.parse()?;
 
-    let privkey = read_secret_from_file(&priv_key_path)?;
+    let privkey = read_secret_from_file(&priv_key_path)
+        .map_err(|_| eyre!("Failed to read private key from file {}", priv_key_path))?;
     let wallet = LocalWallet::from_str(&privkey)?;
     let chain_id = provider.get_chainid().await?.as_u64();
     let client = Arc::new(SignerMiddleware::new(
@@ -58,7 +59,7 @@ async fn main() -> eyre::Result<()> {
     println!("Counter number value = {:?}", num);
 
     let _ = counter.increment().send().await?.await?;
-    println!("Successfully incremented counter via a tx");
+    println!("Successfully incremented counter via a transaction");
 
     let num = counter.number().call().await;
     println!("New counter number value = {:?}", num);
@@ -66,7 +67,8 @@ async fn main() -> eyre::Result<()> {
 }
 
 fn read_secret_from_file(fpath: &str) -> eyre::Result<String> {
-    let f = std::fs::File::open(fpath)?;
+    let f = std::fs::File::open(fpath)
+        .map_err(|_| eyre!("Failed to open file {}", fpath))?;
     let mut buf_reader = BufReader::new(f);
     let mut secret = String::new();
     buf_reader.read_line(&mut secret)?;
