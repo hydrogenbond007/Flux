@@ -1,5 +1,3 @@
-//! Example on how to interact with a deployed `stylus-hello-world` program using defaults.
-//! This example uses ethers-rs to instantiate the program using a Solidity ABI.
 //! Then, it attempts to check the current counter value, increment it via a tx,
 //! and check the value again. The deployed program is fully written in Rust and compiled to WASM
 //! but with Stylus, it is accessible just as a normal Solidity smart contract is via an ABI.
@@ -25,52 +23,71 @@ const ENV_RPC_URL: &str = "RPC_URL";
 /// Deployed pragram address.
 const ENV_PROGRAM_ADDRESS: &str = "STYLUS_PROGRAM_ADDRESS";
 
-#[tokio::main]
-async fn main() -> eyre::Result<()> {
-    let priv_key_path = std::env::var(ENV_PRIV_KEY_PATH)
-        .map_err(|_| eyre!("Environment variable {} is not set", ENV_PRIV_KEY_PATH))?;
-    let rpc_url =
-        std::env::var(ENV_RPC_URL).map_err(|_| eyre!("Environment variable {} is not set", ENV_RPC_URL))?;
-    let program_address = std::env::var(ENV_PROGRAM_ADDRESS)
-        .map_err(|_| eyre!("Environment variable {} is not set", ENV_PROGRAM_ADDRESS))?;
-    abigen!(
-        Counter,
-        r#"[
-            function number() external view returns (uint256)
-            function setNumber(uint256 number) external
-            function increment() external
-        ]"#
-    );
-
-    let provider = Provider::<Http>::try_from(rpc_url)?;
-    let address: Address = program_address.parse()?;
-
-    let privkey = read_secret_from_file(&priv_key_path)
-        .map_err(|_| eyre!("Failed to read private key from file {}", priv_key_path))?;
-    let wallet = LocalWallet::from_str(&privkey)?;
-    let chain_id = provider.get_chainid().await?.as_u64();
-    let client = Arc::new(SignerMiddleware::new(
-        provider,
-        wallet.clone().with_chain_id(chain_id),
-    ));
-
-    let counter = Counter::new(address, client);
-    let num = counter.number().call().await;
-    println!("Counter number value = {:?}", num);
-
-    let _ = counter.increment().send().await?.await?;
-    println!("Successfully incremented counter via a transaction");
-
-    let num = counter.number().call().await;
-    println!("New counter number value = {:?}", num);
-    Ok(())
+struct Stream {
+    // Define necessary properties
+    amount_deposited: u128,
+    amount_withdrawn: u128,
+    is_cancelable: bool,
+    was_canceled: bool,
+    // other fields...
 }
 
-fn read_secret_from_file(fpath: &str) -> eyre::Result<String> {
-    let f = std::fs::File::open(fpath)
-        .map_err(|_| eyre!("Failed to open file {}", fpath))?;
-    let mut buf_reader = BufReader::new(f);
-    let mut secret = String::new();
-    buf_reader.read_line(&mut secret)?;
-    Ok(secret.trim().to_string())
+impl Stream {
+    // Create a new stream (equivalent to the 'Create Stream' section)
+    pub fn create(stream_id: u128, amount: u128) -> Self {
+        // validate params (assumed to be done before this function is called)
+
+        // Transfer asset logic (depends on the framework and external libraries)
+        // transfer_asset(msg.sender, contract_address, amount);
+
+        // Log the newly created stream (depends on the framework)
+        // log_new_stream_created_event(stream_id);
+
+        Self {
+            amount_deposited: amount,
+            amount_withdrawn: 0,
+            is_cancelable: true,
+            was_canceled: false,
+            // initialize other fields
+        }
+    }
+
+    // Withdraw from a stream (equivalent to the 'Withdraw Stream' section)
+    pub fn withdraw(&mut self, amount: u128) {
+        let withdrawable_amount = self.amount_deposited - self.amount_withdrawn;
+        if amount <= withdrawable_amount {
+            self.amount_withdrawn += amount;
+
+            if self.amount_withdrawn >= self.amount_deposited {
+                self.is_cancelable = false;
+                // Mark stream as depleted
+            }
+
+            // Transfer amount to the recipient
+            // transfer_amount(recipient_address, amount);
+
+            // Emit withdrawal event
+            // emit_withdrawal_event(stream_id, amount);
+        }
+    }
+
+    // Cancel a stream (equivalent to the 'Cancel Stream' section)
+    pub fn cancel(&mut self) {
+        let streamed_amount = self.calculate_streamed_amount(); // Assume this is a method you define
+        if streamed_amount <= self.amount_deposited {
+            let sender_amount = self.amount_deposited - streamed_amount;
+            let recipient_amount = streamed_amount - self.amount_withdrawn;
+
+            self.was_canceled = true;
+            self.is_cancelable = false;
+
+            // Refund the sender
+            // refund_sender(sender_address, sender_amount);
+
+            // Emit cancel event
+            // emit_cancel_event(stream_id);
+        }
+    }
+
+    // Other necessary methods...
 }
