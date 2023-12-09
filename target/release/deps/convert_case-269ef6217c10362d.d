@@ -1,0 +1,11 @@
+/home/ubuntu/flux/target/release/deps/libconvert_case-269ef6217c10362d.rmeta: /home/ubuntu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/convert_case-0.6.0/src/lib.rs /home/ubuntu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/convert_case-0.6.0/src/case.rs /home/ubuntu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/convert_case-0.6.0/src/converter.rs /home/ubuntu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/convert_case-0.6.0/src/pattern.rs /home/ubuntu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/convert_case-0.6.0/src/segmentation.rs
+
+/home/ubuntu/flux/target/release/deps/libconvert_case-269ef6217c10362d.rlib: /home/ubuntu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/convert_case-0.6.0/src/lib.rs /home/ubuntu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/convert_case-0.6.0/src/case.rs /home/ubuntu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/convert_case-0.6.0/src/converter.rs /home/ubuntu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/convert_case-0.6.0/src/pattern.rs /home/ubuntu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/convert_case-0.6.0/src/segmentation.rs
+
+/home/ubuntu/flux/target/release/deps/convert_case-269ef6217c10362d.d: /home/ubuntu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/convert_case-0.6.0/src/lib.rs /home/ubuntu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/convert_case-0.6.0/src/case.rs /home/ubuntu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/convert_case-0.6.0/src/converter.rs /home/ubuntu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/convert_case-0.6.0/src/pattern.rs /home/ubuntu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/convert_case-0.6.0/src/segmentation.rs
+
+/home/ubuntu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/convert_case-0.6.0/src/lib.rs:
+/home/ubuntu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/convert_case-0.6.0/src/case.rs:
+/home/ubuntu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/convert_case-0.6.0/src/converter.rs:
+/home/ubuntu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/convert_case-0.6.0/src/pattern.rs:
+/home/ubuntu/.cargo/registry/src/index.crates.io-6f17d22bba15001f/convert_case-0.6.0/src/segmentation.rs:
